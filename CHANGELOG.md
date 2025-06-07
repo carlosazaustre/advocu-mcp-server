@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.4](https://github.com/carlosazaustre/advocu-mcp-server/compare/v0.0.3...v0.0.4) (2025-06-07)
+
+
+### Bug Fixes
+
+* format keywords array in package.json ([3fccfe6](https://github.com/carlosazaustre/advocu-mcp-server/commit/3fccfe6c18940d251fc3e2a0654a64a31f3b9594))
+
+
+### Documentation
+
+* add environment variable configuration for Advocu access token in README ([8d908d1](https://github.com/carlosazaustre/advocu-mcp-server/commit/8d908d1b469f00ba3a402c479f04967e1ec2e70f))
+
 ### [0.0.3](https://github.com/carlosazaustre/advocu-mcp-server/compare/v0.0.2...v0.0.3) (2025-06-07)
 
 
