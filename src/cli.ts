@@ -140,7 +140,14 @@ async function main(): Promise<void> {
   }
 }
 
-// Handle uncaught errors gracefully
+/**
+ * Export CLI function for use from main entry point
+ */
+export async function runCLI(): Promise<void> {
+  await main();
+}
+
+// Handle uncaught errors gracefully when run directly
 process.on("uncaughtException", (error) => {
   console.error("❌ Uncaught exception:", error.message);
   process.exit(1);
@@ -151,8 +158,10 @@ process.on("unhandledRejection", (reason) => {
   process.exit(1);
 });
 
-// Run CLI
-main().catch((error) => {
-  console.error("❌ CLI error:", error instanceof Error ? error.message : error);
-  process.exit(1);
-});
+// Run CLI only if this file is executed directly
+if (require.main === module) {
+  main().catch((error) => {
+    console.error("❌ CLI error:", error instanceof Error ? error.message : error);
+    process.exit(1);
+  });
+}
