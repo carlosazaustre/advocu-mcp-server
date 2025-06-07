@@ -8,61 +8,91 @@ A Model Context Protocol (MCP) server for reporting activities to the Advocu GDE
 
 ## Quick Installation
 
-### Local Setup
+### Using NPM
+
 ```bash
-git clone <your-repo>
-cd advocu-mcp-server
-chmod +x setup.sh
-./setup.sh
+npm install -g advocu-mcp-server
 ```
 
-## Manual Configuration
+### Using npx (Recommended: No Installation Required)
+
+```bash
+npx advocu-mcp-server
+```
+
+## Configuration
 
 ### Prerequisites
-- Node.js 20+
+- Node.js 18+
 - Advocu GDE API access token
 
-### Installation Steps
+### Step 1: Configure Claude Desktop
 
-1. **Clone and install dependencies:**
-   ```bash
-   git clone <your-repo>
-   cd advocu-mcp-server
-   npm install
-   ```
+Edit your Claude Desktop configuration file:
 
-2. **Configure environment variables:**
-   ```bash
-   # Create .env file
-   echo "ADVOCU_ACCESS_TOKEN=your_token_here" > .env
-   echo "ADVOCU_API_URL=https://api.advocu.com/personal-api/v1/gde" >> .env
-   ```
+**macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
 
-3. **Build the project:**
-   ```bash
-   npm run build
-   ```
+**Windows**: `%APPDATA%/Claude/claude_desktop_config.json`
 
-4. **Configure Claude Desktop:**
-   
-   **macOS**: Edit `~/Library/Application Support/Claude/claude_desktop_config.json`
-   
-   **Windows**: Edit `%APPDATA%/Claude/claude_desktop_config.json`
-   
-   ```json
-   {
-     "mcpServers": {
-       "activity-reporting": {
-         "command": "node",
-         "args": ["/absolute/path/to/project/dist/index.js"],
-         "env": {
-          "ADVOCU_ACCESS_TOKEN": "your_advocu_token"
-       }
-     }
-   }
-   ```
+#### Option A: Using Global Installation
+```json
+{
+  "mcpServers": {
+    "activity-reporting": {
+      "command": "advocu-mcp-server",
+      "env": {
+        "ADVOCU_ACCESS_TOKEN": "your_advocu_token_here"
+      }
+    }
+  }
+}
+```
 
-5. **Restart Claude Desktop**
+#### Option B: Using npx
+```json
+{
+  "mcpServers": {
+    "activity-reporting": {
+      "command": "npx",
+      "args": ["-y", "advocu-mcp-server"],
+      "env": {
+        "ADVOCU_ACCESS_TOKEN": "your_advocu_token_here"
+      }
+    }
+  }
+}
+```
+
+### Step 2: Restart Claude Desktop
+
+Close and reopen Claude Desktop to load the new configuration.
+
+## Alternative: Local Development Setup
+
+If you want to contribute or modify the server:
+
+```bash
+git clone https://github.com/carlosazaustre/advocu-mcp-server.git
+cd advocu-mcp-server
+npm install
+npm run build
+```
+
+Then configure Claude Desktop with the local path:
+
+```json
+{
+  "mcpServers": {
+    "activity-reporting": {
+      "command": "node",
+      "args": ["/absolute/path/to/advocu-mcp-server/dist/index.js"],
+      "env": {
+        "ADVOCU_ACCESS_TOKEN": "your_advocu_token_here"
+      }
+    }
+  }
+}
+```
 
 ## Available Tools
 
@@ -121,11 +151,27 @@ advocu-mcp-server/
 ├── src/
 │   ├── index.ts                    # Entry point
 │   ├── server.ts                   # Main server class
-│   ├── interfaces/                 # Interfaces
-│   └── types/                      # Types
+│   ├── interfaces/                 # Activity draft interfaces
+│   │   ├── ActivityDraftBase.ts
+│   │   ├── ContentCreationDraft.ts
+│   │   ├── GooglerInteractionDraft.ts
+│   │   ├── MentoringDraft.ts
+│   │   ├── ProductFeedbackDraft.ts
+│   │   ├── PublicSpeakingDraft.ts
+│   │   ├── StoryDraft.ts
+│   │   └── WorkshopDraft.ts
+│   └── types/                      # Type definitions
+│       ├── ContentType.ts
+│       ├── Country.ts
+│       ├── EventFormat.ts
+│       ├── InteractionFormat.ts
+│       ├── InteractionType.ts
+│       ├── ProductFeedbackContentType.ts
+│       ├── SignificanceType.ts
+│       └── Tag.ts
 ├── dist/                           # Compiled output
 ├── docs/                           # Documentation
-├── .env                            # Environment variables
+│   └── API.md
 ├── package.json
 ├── tsconfig.json
 └── README.md
