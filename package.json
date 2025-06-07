@@ -7,12 +7,7 @@
   "bin": {
     "advocu-mcp-server": "dist/index.js"
   },
-  "files": [
-    "dist/**/*",
-    "README.md",
-    "LICENSE",
-    "package.json"
-  ],
+  "files": ["dist/**/*", "README.md", "LICENSE", "package.json"],
   "engines": {
     "node": ">=18.0.0"
   },
