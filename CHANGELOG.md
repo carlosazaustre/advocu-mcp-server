@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.3](https://github.com/carlosazaustre/advocu-mcp-server/compare/v0.1.2...v0.1.3) (2025-06-07)
+
+
+### Bug Fixes
+
+* add shebang to index.ts for executable script ([bae5eb5](https://github.com/carlosazaustre/advocu-mcp-server/commit/bae5eb597578be6b7968646164ba8a23e1068cb4))
+* normalize formatting of files array in package.json ([047a570](https://github.com/carlosazaustre/advocu-mcp-server/commit/047a57075ea58a85c818bb9f34c6d0884d164f99))
+
 ### [0.1.2](https://github.com/carlosazaustre/advocu-mcp-server/compare/v0.1.0...v0.1.2) (2025-06-07)
 
 ### [0.1.1](https://github.com/carlosazaustre/advocu-mcp-server/compare/v0.1.0...v0.1.1) (2025-06-07)

@@ -2,12 +2,17 @@
   "name": "advocu-mcp-server",
   "description": "MCP Server for Advocu - Reporting Tool for GDEs",
   "author": "Carlos Azaustre <cazaustre@gmail.com> (https://carlosazaustre.es/)",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "main": "dist/index.js",
   "bin": {
     "advocu-mcp-server": "dist/index.js"
   },
-  "files": ["dist/**/*", "README.md", "LICENSE", "package.json"],
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE",
+    "package.json"
+  ],
   "engines": {
     "node": ">=18.0.0"
   },
