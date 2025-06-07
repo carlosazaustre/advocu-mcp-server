@@ -4,6 +4,13 @@
   "author": "Carlos Azaustre <cazaustre@gmail.com> (https://carlosazaustre.es/)",
   "version": "0.0.4",
   "main": "dist/index.js",
+  "bin": {
+    "advocu-mcp-server": "dist/index.js"
+  },
+  "files": ["dist/**/*", "README.md", "LICENSE", "package.json"],
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "lint": "biome check",
     "format": "biome format --write",
@@ -12,22 +19,31 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "tsx src/index.ts",
+    "prepublishOnly": "npm run build",
+    "prepack": "npm run build",
+    "publish:dry": "npm publish --dry-run",
     "release": "standard-version",
     "release:patch": "standard-version --release-as patch",
     "release:minor": "standard-version --release-as minor",
     "release:major": "standard-version --release-as major",
     "release:dry-run": "standard-version --dry-run",
-    "postrelease": "git push --follow-tags origin main"
+    "postrelease": "git push --follow-tags origin main && npm publish"
   },
   "keywords": [
     "gde",
     "advocu",
     "mcp",
-    "server"
+    "server",
+    "model-context-protocol",
+    "google-developer-expert",
+    "activity-reporting",
+    "ai",
+    "claude",
+    "cli"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/carlosazaustre/advocu-mcp-server.git"
+    "url": "git+https://github.com/carlosazaustre/advocu-mcp-server.git"
   },
   "license": "MIT",
   "devDependencies": {
@@ -45,5 +61,11 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.1",
     "dotenv": "^16.5.0"
+  },
+  "optionalDependencies": {
+    "@biomejs/cli-linux-x64": "1.9.4",
+    "@biomejs/cli-darwin-x64": "1.9.4",
+    "@biomejs/cli-darwin-arm64": "1.9.4",
+    "@biomejs/cli-win32-x64": "1.9.4"
   }
 }
