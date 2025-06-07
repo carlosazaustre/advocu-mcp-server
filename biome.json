@@ -28,5 +28,10 @@
     "formatter": {
       "quoteStyle": "double"
     }
+  },
+  "json": {
+    "linter": {
+      "enabled": false
+    }
   }
 }
