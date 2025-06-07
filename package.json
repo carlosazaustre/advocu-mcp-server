@@ -5,7 +5,7 @@
   "version": "0.0.4",
   "main": "dist/index.js",
   "bin": {
-    "advocu-mcp-server": "dist/main.js"
+    "advocu-mcp-server": "dist/index.js"
   },
   "files": ["dist/**/*", "README.md", "LICENSE", "package.json"],
   "engines": {
@@ -19,7 +19,6 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "tsx src/index.ts",
-    "cli": "tsx src/cli.ts",
     "prepublishOnly": "npm run build",
     "prepack": "npm run build",
     "publish:dry": "npm publish --dry-run",
