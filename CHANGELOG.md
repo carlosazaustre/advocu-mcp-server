@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.3](https://github.com/carlosazaustre/advocu-mcp-server/compare/v0.0.2...v0.0.3) (2025-06-07)
+
+
+### Features
+
+* add README and setup script for initial project setup and configuration ([1782d20](https://github.com/carlosazaustre/advocu-mcp-server/commit/1782d20f39e2a58dd40325d7557ce6c0a0f430c7))
+
 ### [0.0.2](https://github.com/carlosazaustre/advocu-mcp-server/compare/v0.0.1...v0.0.2) (2025-06-07)
 
 
