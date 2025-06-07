@@ -22,7 +22,7 @@ import {
   SignificanceType,
 } from "./types";
 
-class ActivityReportingServer {
+export class ActivityReportingServer {
   private readonly server: Server;
   private readonly accessToken: string;
   private readonly baseUrl = process.env.ADVOCU_API_URL ?? "https://api.advocu.com/personal-api/v1/gde";
@@ -639,6 +639,3 @@ class ActivityReportingServer {
     console.error("Activity Reporting MCP server running on stdio");
   }
 }
-
-const server = new ActivityReportingServer();
-server.run().catch(console.error);

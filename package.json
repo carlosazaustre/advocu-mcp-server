@@ -3,15 +3,15 @@
   "description": "MCP Server for Advocu - Reporting Tool for GDEs",
   "author": "Carlos Azaustre <cazaustre@gmail.com> (https://carlosazaustre.es/)",
   "version": "0.0.0",
-  "main": "dist/server.js",
+  "main": "dist/index.js",
   "scripts": {
     "lint": "biome check",
     "format": "biome format --write",
     "test": "echo \"No test specified\"",
     "prepare": "husky",
     "build": "tsc",
-    "start": "node dist/server.js",
-    "dev": "tsx src/server.ts",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
     "release": "standard-version",
     "release:patch": "standard-version --release-as patch",
     "release:minor": "standard-version --release-as minor",
@@ -29,6 +29,7 @@
     "@biomejs/biome": "1.9.4",
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
+    "@types/dotenv": "^6.1.1",
     "@types/node": "^22.15.30",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.0",
@@ -37,6 +38,7 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.12.1"
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "dotenv": "^16.5.0"
   }
 }
