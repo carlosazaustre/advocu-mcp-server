@@ -2,8 +2,8 @@
   "name": "advocu-mcp-server",
   "description": "MCP Server for Advocu - Reporting Tool for GDEs",
   "author": "Carlos Azaustre <cazaustre@gmail.com> (https://carlosazaustre.es/)",
-  "version": "0.0.0",
-  "main": "dist/index.js",
+  "version": "0.0.1",
+  "main": "dist/server.js",
   "scripts": {
     "lint": "biome check",
     "format": "biome format --write",
