@@ -1,0 +1,3 @@
+npx lint-staged
+npx commitlint --edit $1
+
