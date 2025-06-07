@@ -19,12 +19,7 @@
     "release:dry-run": "standard-version --dry-run",
     "postrelease": "git push --follow-tags origin main"
   },
-  "keywords": [
-    "gde",
-    "advocu",
-    "mcp",
-    "server"
-  ],
+  "keywords": ["gde", "advocu", "mcp", "server"],
   "repository": {
     "type": "git",
     "url": "https://github.com/carlosazaustre/advocu-mcp-server.git"
