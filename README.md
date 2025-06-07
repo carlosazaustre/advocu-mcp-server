@@ -54,7 +54,9 @@ chmod +x setup.sh
      "mcpServers": {
        "activity-reporting": {
          "command": "node",
-         "args": ["/absolute/path/to/project/dist/index.js"]
+         "args": ["/absolute/path/to/project/dist/index.js"],
+         "env": {
+          "ADVOCU_ACCESS_TOKEN": "your_advocu_token"
        }
      }
    }
@@ -119,14 +121,11 @@ advocu-mcp-server/
 ├── src/
 │   ├── index.ts                    # Entry point
 │   ├── server.ts                   # Main server class
-│   ├── shared/domain/              # Domain layer (DDD)
-│   │   ├── enums/                  # Domain enums
-│   │   └── interfaces/             # Domain interfaces
-│   ├── interfaces/                 # Legacy interfaces (compatibility)
-│   └── types/                      # Legacy types (compatibility)
+│   ├── interfaces/                 # Interfaces
+│   └── types/                      # Types
 ├── dist/                           # Compiled output
 ├── docs/                           # Documentation
-├── .env                           # Environment variables
+├── .env                            # Environment variables
 ├── package.json
 ├── tsconfig.json
 └── README.md
