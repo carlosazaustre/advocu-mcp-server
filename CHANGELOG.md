@@ -2,6 +2,81 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0] (2025-10-12)
+
+### Major Features
+
+* **Microsoft MVP Integration**: Complete integration with Microsoft MVP API
+  - Video activity submission
+  - Blog post submission
+  - Speaking engagement submission
+  - Automatic token management and validation
+  - Comprehensive error handling
+
+* **Unified Server**: Single server supporting both GDE (Advocu) and MVP programs
+  - Conditional tool enablement based on configured credentials
+  - Unified configuration via environment variables
+  - Dual program support for users in both programs
+
+* **MCP Resources**: Documentation accessible via MCP resources
+  - `docs://api-reference` - Complete API documentation
+  - `docs://mvp-api-reference` - Detailed MVP API reference
+  - `docs://mvp-fixes-changelog` - MVP integration fixes changelog
+  - `docs://error-handling` - Error handling improvements guide
+  - `docs://mcp-resources` - MCP resources usage guide
+
+### Improvements
+
+* **Error Handling**: Enhanced error messages returned as content instead of exceptions
+  - Contextual error messages by HTTP status code (401, 400, 429)
+  - Detailed troubleshooting steps for authentication failures
+  - Activity context included in error messages
+
+* **API Validation**: Strict validation for MVP API
+  - Activity type validation (Video, Blog, Speaking, Book/E-book)
+  - Role validation per activity type
+  - Target audience validation
+  - Technology focus area support
+
+* **Token Management**: Simplified token capture and management
+  - HAR file export support for complete token capture
+  - Environment variable configuration
+  - Token validation on server startup
+
+### Bug Fixes
+
+* **MVP Activity Types**: Fixed incorrect activity type names
+  - Removed invalid `WEBINAR_ONLINE_TRAINING` type
+  - Use correct `VIDEO` type for video submissions
+
+* **MVP Roles**: Fixed role validation per activity type
+  - Videos: `Host`, `Presenter`, `Speaker` only
+  - Blogs: `Author`, `Co-Author`, `Contributor`
+  - Books: `Author`, `Co-Author`
+  - Speaking: `Speaker`, `Panelist`, `Moderator`, `Presenter`
+
+* **Additional Technology Areas**: Force empty array for `additionalTechnologyAreas`
+  - API currently rejects non-empty values
+  - Will be investigated in future releases
+
+### Documentation
+
+* **API Reference**: Complete documentation for both MVP and GDE APIs
+* **MVP API Reference**: Detailed field specifications and examples
+* **CHANGELOG_MVP_FIXES**: Comprehensive changelog of MVP integration fixes
+* **ERROR_HANDLING_IMPROVEMENTS**: Documentation of error handling patterns
+* **MCP_RESOURCES**: Guide for using MCP resources
+
+### Contributors
+
+* Alan Buscaglia (Gentleman Programming) - MVP integration, error handling, and MCP resources
+
+### Testing
+
+* Successful video submission (contributionId: 351180)
+* Token capture via HAR file export validated
+* Error handling tested across all status codes
+
 ### [0.1.3](https://github.com/carlosazaustre/advocu-mcp-server/compare/v0.1.2...v0.1.3) (2025-06-07)
 
 

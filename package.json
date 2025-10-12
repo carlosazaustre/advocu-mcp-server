@@ -1,7 +1,10 @@
 {
   "name": "advocu-mcp-server",
-  "description": "MCP Server for Advocu - Reporting Tool for GDEs",
+  "description": "Unified MCP Server for Google GDE (Advocu) and Microsoft MVP Activity Reporting",
   "author": "Carlos Azaustre <cazaustre@gmail.com> (https://carlosazaustre.es/)",
+  "contributors": [
+    "Alan Buscaglia (https://gentleman.programming)"
+  ],
   "version": "0.1.3",
   "main": "dist/index.js",
   "bin": {
@@ -24,6 +27,7 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "tsx src/index.ts",
+    "capture-mvp-token": "tsx scripts/capture-mvp-token.ts",
     "prepublishOnly": "npm run build",
     "prepack": "npm run build",
     "publish:dry": "npm publish --dry-run",
@@ -36,7 +40,9 @@
   },
   "keywords": [
     "gde",
+    "mvp",
     "advocu",
+    "microsoft-mvp",
     "mcp",
     "server",
     "model-context-protocol",
@@ -44,7 +50,8 @@
     "activity-reporting",
     "ai",
     "claude",
-    "cli"
+    "cli",
+    "developer-program"
   ],
   "repository": {
     "type": "git",
@@ -55,10 +62,12 @@
     "@biomejs/biome": "1.9.4",
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
+    "@playwright/test": "^1.56.0",
     "@types/dotenv": "^6.1.1",
     "@types/node": "^22.15.30",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.0",
+    "playwright": "^1.56.0",
     "standard-version": "^9.5.0",
     "tsx": "^4.19.4",
     "typescript": "^5.8.3"
@@ -68,9 +77,9 @@
     "dotenv": "^16.5.0"
   },
   "optionalDependencies": {
-    "@biomejs/cli-linux-x64": "1.9.4",
-    "@biomejs/cli-darwin-x64": "1.9.4",
     "@biomejs/cli-darwin-arm64": "1.9.4",
+    "@biomejs/cli-darwin-x64": "1.9.4",
+    "@biomejs/cli-linux-x64": "1.9.4",
     "@biomejs/cli-win32-x64": "1.9.4"
   }
 }
