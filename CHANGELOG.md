@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0](https://github.com/carlosazaustre/advocu-mcp-server/compare/v0.1.3...v0.2.0) (2025-11-04)
+
+
+### ⚠ BREAKING CHANGES
+
+* ADVOCU_ACCESS_TOKEN is now optional but either GDE or MVP configuration must be provided
+
+### Features
+
+* add Microsoft MVP API support and unified server ([#127](https://github.com/carlosazaustre/advocu-mcp-server/issues/127)) ([00265a4](https://github.com/carlosazaustre/advocu-mcp-server/commit/00265a447810d06d08d77922ed70a6a0b174aa2b))
+
 ## [0.2.0] (2025-10-12)
 
 ### Major Features
