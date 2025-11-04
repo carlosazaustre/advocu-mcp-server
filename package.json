@@ -64,7 +64,7 @@
     "@commitlint/config-conventional": "^19.8.1",
     "@playwright/test": "^1.56.0",
     "@types/dotenv": "^6.1.1",
-    "@types/node": "^22.15.30",
+    "@types/node": "^24.10.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.0",
     "playwright": "^1.56.0",
