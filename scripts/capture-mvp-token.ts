@@ -1,4 +1,5 @@
 #!/usr/bin/env tsx
+
 /**
  * Manual MVP Token Capture Tool
  *
@@ -6,12 +7,12 @@
  * that you capture manually from your browser's DevTools.
  */
 
-import { writeFileSync, readFileSync, existsSync } from "node:fs";
+import { exec } from "node:child_process";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
-import { exec } from "node:child_process";
-import { promisify } from "node:util";
 import * as readline from "node:readline";
+import { promisify } from "node:util";
 
 const execAsync = promisify(exec);
 
@@ -75,9 +76,9 @@ function updateClaudeDesktopConfig(newToken: string): boolean {
 
 async function main() {
   console.log("\n🔑 MVP Token Manual Capture Tool\n");
-  console.log("=" .repeat(60));
+  console.log("=".repeat(60));
   console.log("\n⚠️  IMPORTANTE: Debes estar logueado en el portal MVP ANTES de continuar\n");
-  console.log("=" .repeat(60));
+  console.log("=".repeat(60));
   console.log("\n📋 INSTRUCCIONES:\n");
   console.log("1. 🌐 Abriendo tu navegador por defecto en el portal MVP...");
   console.log("2. ✅ Si ya estás logueado, verás tu cuenta directamente");

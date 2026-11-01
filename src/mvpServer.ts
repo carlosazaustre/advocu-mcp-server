@@ -7,8 +7,13 @@ import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { CallToolRequestSchema, ErrorCode, ListToolsRequestSchema, McpError } from "@modelcontextprotocol/sdk/types.js";
 
-import type { MVPVideoActivity, MVPBlogActivity, MVPSpeakingActivity, MVPBookActivity } from "./interfaces/mvp/index.js";
-import { MVPActivityType, MVPActivityRole, MVPTargetAudience } from "./types/mvp/index.js";
+import type {
+  MVPBlogActivity,
+  MVPBookActivity,
+  MVPSpeakingActivity,
+  MVPVideoActivity,
+} from "./interfaces/mvp/index.js";
+import { MVPActivityRole, MVPActivityType, MVPTargetAudience } from "./types/mvp/index.js";
 
 export class MVPActivityReportingServer {
   private readonly server: Server;
@@ -349,10 +354,7 @@ export class MVPActivityReportingServer {
           throw error;
         }
         const errorMsg = this.getErrorMessage(error);
-        throw new McpError(
-          ErrorCode.InternalError,
-          `Failed to execute tool '${name}': ${errorMsg}`
-        );
+        throw new McpError(ErrorCode.InternalError, `Failed to execute tool '${name}': ${errorMsg}`);
       }
     });
   }
@@ -474,7 +476,8 @@ export class MVPActivityReportingServer {
         let errorMessage = `MVP API error (${response.status})`;
 
         if (response.status === 401) {
-          errorMessage = "❌ MVP authentication failed. Your MVP_ACCESS_TOKEN may be expired or invalid.\n\nTo fix:\n1. Log in to https://mvp.microsoft.com/\n2. Open DevTools → Network tab\n3. Create/edit an activity\n4. Export as HAR file\n5. Extract the Bearer token from Authorization header\n6. Update your configuration";
+          errorMessage =
+            "❌ MVP authentication failed. Your MVP_ACCESS_TOKEN may be expired or invalid.\n\nTo fix:\n1. Log in to https://mvp.microsoft.com/\n2. Open DevTools → Network tab\n3. Create/edit an activity\n4. Export as HAR file\n5. Extract the Bearer token from Authorization header\n6. Update your configuration";
         } else if (response.status === 400) {
           errorMessage = `❌ MVP API rejected the request:\n\n${errorText}\n\nPlease check:\n- Activity type is correct for the data provided\n- Role is valid for this activity type\n- All required fields are present\n- Date format is correct (YYYY-MM-DD)`;
         } else if (response.status === 429) {
@@ -511,7 +514,7 @@ export class MVPActivityReportingServer {
       const errorMsg = this.getErrorMessage(error);
       throw new McpError(
         ErrorCode.InternalError,
-        `❌ Failed to submit MVP activity:\n\n${errorMsg}\n\nActivity type: ${activity.activityTypeName}\nTitle: ${activity.title}`
+        `❌ Failed to submit MVP activity:\n\n${errorMsg}\n\nActivity type: ${activity.activityTypeName}\nTitle: ${activity.title}`,
       );
     }
   }

@@ -4,15 +4,15 @@
  */
 
 export type { MVPActivityBase } from "./MVPActivityBase.js";
-export type { MVPVideoActivity } from "./MVPVideoActivity.js";
 export type { MVPBlogActivity } from "./MVPBlogActivity.js";
-export type { MVPSpeakingActivity } from "./MVPSpeakingActivity.js";
 export type { MVPBookActivity } from "./MVPBookActivity.js";
+export type { MVPSpeakingActivity } from "./MVPSpeakingActivity.js";
+export type { MVPVideoActivity } from "./MVPVideoActivity.js";
 
-import type { MVPVideoActivity } from "./MVPVideoActivity.js";
 import type { MVPBlogActivity } from "./MVPBlogActivity.js";
-import type { MVPSpeakingActivity } from "./MVPSpeakingActivity.js";
 import type { MVPBookActivity } from "./MVPBookActivity.js";
+import type { MVPSpeakingActivity } from "./MVPSpeakingActivity.js";
+import type { MVPVideoActivity } from "./MVPVideoActivity.js";
 
 /**
  * Union type of all MVP activity types
