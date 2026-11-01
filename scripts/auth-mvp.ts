@@ -14,7 +14,7 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { homedir, platform } from "node:os";
 import { join } from "node:path";
-import { type BrowserContext, type Page, chromium } from "playwright";
+import { type BrowserContext, chromium, type Page } from "playwright";
 
 // MVP API base URL to intercept
 const MVP_API_BASE = "mavenapi-prod.azurewebsites.net";

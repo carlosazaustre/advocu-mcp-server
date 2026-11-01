@@ -4,6 +4,7 @@
  */
 
 import { config } from "dotenv";
+
 config();
 
 const MVP_ACCESS_TOKEN = process.env.MVP_ACCESS_TOKEN;
@@ -51,8 +52,7 @@ async function testMVPAPI() {
         Authorization: `Bearer ${MVP_ACCESS_TOKEN}`,
         Referer: "https://mvp.microsoft.com/",
         Origin: "https://mvp.microsoft.com",
-        "User-Agent":
-          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:143.0) Gecko/20100101 Firefox/143.0",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:143.0) Gecko/20100101 Firefox/143.0",
         Accept: "*/*",
         "Accept-Language": "en-US,en;q=0.5",
       },

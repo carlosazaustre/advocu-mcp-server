@@ -2,13 +2,20 @@
   "name": "advocu-mcp-server",
   "description": "Unified MCP Server for Google GDE (Advocu) and Microsoft MVP Activity Reporting",
   "author": "Carlos Azaustre <cazaustre@gmail.com> (https://carlosazaustre.es/)",
-  "contributors": ["Alan Buscaglia (https://gentleman.programming)"],
+  "contributors": [
+    "Alan Buscaglia (https://gentleman.programming)"
+  ],
   "version": "0.1.3",
   "main": "dist/index.js",
   "bin": {
     "advocu-mcp-server": "dist/index.js"
   },
-  "files": ["dist/**/*", "README.md", "LICENSE", "package.json"],
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE",
+    "package.json"
+  ],
   "engines": {
     "node": ">=18.0.0"
   },

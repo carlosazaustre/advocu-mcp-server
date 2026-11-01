@@ -27,5 +27,5 @@ export enum MVPActivityType {
   TECHNICAL_SOCIAL_MEDIA = "Technical Social Media (Twitter, Facebook, LinkedIn...)",
   TRANSLATION_REVIEW = "Translation Review, Feedback and Editing",
   VIDEO = "Video",
-  WORKSHOP = "Workshop"
+  WORKSHOP = "Workshop",
 }

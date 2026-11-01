@@ -3,6 +3,8 @@
  * @description MCP server that supports both GDE (Advocu) and Microsoft MVP activity submissions
  */
 
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import {
@@ -13,8 +15,6 @@ import {
   McpError,
   ReadResourceRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
 
 // GDE imports
 import type {
@@ -26,6 +26,8 @@ import type {
   StoryDraft,
   WorkshopDraft,
 } from "./interfaces/index.js";
+// MVP imports
+import type { MVPBlogActivity, MVPSpeakingActivity, MVPVideoActivity } from "./interfaces/mvp/index.js";
 import {
   ContentType,
   Country,
@@ -35,10 +37,7 @@ import {
   ProductFeedbackContentType,
   SignificanceType,
 } from "./types/index.js";
-
-// MVP imports
-import type { MVPVideoActivity, MVPBlogActivity, MVPSpeakingActivity } from "./interfaces/mvp/index.js";
-import { MVPActivityType, MVPActivityRole, MVPTargetAudience } from "./types/mvp/index.js";
+import { MVPActivityRole, MVPActivityType, MVPTargetAudience } from "./types/mvp/index.js";
 
 // Get the docs directory from environment variable or fallback
 // IMPORTANT: Set DOCS_DIR in Claude Desktop config to the full path
@@ -231,13 +230,7 @@ export class UnifiedActivityReportingServer {
             properties: {
               documentName: {
                 type: "string",
-                enum: [
-                  "api-reference",
-                  "mvp-api-reference",
-                  "mvp-fixes-changelog",
-                  "error-handling",
-                  "mcp-resources",
-                ],
+                enum: ["api-reference", "mvp-api-reference", "mvp-fixes-changelog", "error-handling", "mcp-resources"],
                 description: "Name of the documentation to retrieve",
               },
             },
@@ -267,9 +260,12 @@ export class UnifiedActivityReportingServer {
                 role: {
                   type: "string",
                   enum: ["Host", "Presenter", "Speaker"],
-                  description: "Valid roles for video activities"
+                  description: "Valid roles for video activities",
                 },
-                technologyFocusArea: { type: "string", description: "Main technology area (e.g., 'Web Development', 'Cloud & AI')" },
+                technologyFocusArea: {
+                  type: "string",
+                  description: "Main technology area (e.g., 'Web Development', 'Cloud & AI')",
+                },
                 liveStreamViews: { type: "integer", minimum: 0 },
                 onDemandViews: { type: "integer", minimum: 0 },
                 numberOfSessions: { type: "integer", minimum: 1, default: 1 },
@@ -380,7 +376,10 @@ export class UnifiedActivityReportingServer {
         // MVP tools
         if (name.startsWith("submit_mvp_")) {
           if (!this.mvpEnabled) {
-            throw new McpError(ErrorCode.InvalidRequest, "MVP tools are not enabled. Please configure MVP credentials.");
+            throw new McpError(
+              ErrorCode.InvalidRequest,
+              "MVP tools are not enabled. Please configure MVP credentials.",
+            );
           }
           switch (name) {
             case "submit_mvp_video":
@@ -395,7 +394,10 @@ export class UnifiedActivityReportingServer {
         // GDE tools
         if (name.startsWith("submit_gde_")) {
           if (!this.gdeEnabled) {
-            throw new McpError(ErrorCode.InvalidRequest, "GDE tools are not enabled. Please configure GDE credentials.");
+            throw new McpError(
+              ErrorCode.InvalidRequest,
+              "GDE tools are not enabled. Please configure GDE credentials.",
+            );
           }
           switch (name) {
             case "submit_gde_content_creation":
@@ -410,10 +412,7 @@ export class UnifiedActivityReportingServer {
           throw error;
         }
         const errorMsg = this.getErrorMessage(error);
-        throw new McpError(
-          ErrorCode.InternalError,
-          `Failed to execute tool '${name}': ${errorMsg}`
-        );
+        throw new McpError(ErrorCode.InternalError, `Failed to execute tool '${name}': ${errorMsg}`);
       }
     });
   }
@@ -623,7 +622,8 @@ export class UnifiedActivityReportingServer {
         let errorMessage = `MVP API error (${response.status})`;
 
         if (response.status === 401) {
-          errorMessage = "❌ MVP authentication failed. Your MVP_ACCESS_TOKEN may be expired or invalid.\n\nTo fix:\n1. Log in to https://mvp.microsoft.com/\n2. Open DevTools → Network tab\n3. Create/edit an activity\n4. Export as HAR file\n5. Extract the Bearer token from Authorization header\n6. Update your configuration";
+          errorMessage =
+            "❌ MVP authentication failed. Your MVP_ACCESS_TOKEN may be expired or invalid.\n\nTo fix:\n1. Log in to https://mvp.microsoft.com/\n2. Open DevTools → Network tab\n3. Create/edit an activity\n4. Export as HAR file\n5. Extract the Bearer token from Authorization header\n6. Update your configuration";
         } else if (response.status === 400) {
           errorMessage = `❌ MVP API rejected the request:\n\n${errorText}\n\nPlease check:\n- Activity type is correct for the data provided\n- Role is valid for this activity type\n- All required fields are present\n- Date format is correct (YYYY-MM-DD)`;
         } else if (response.status === 429) {
@@ -658,7 +658,7 @@ export class UnifiedActivityReportingServer {
       const errorMsg = this.getErrorMessage(error);
       throw new McpError(
         ErrorCode.InternalError,
-        `❌ Failed to submit MVP activity:\n\n${errorMsg}\n\nActivity type: ${activity.activityTypeName}\nTitle: ${activity.title}`
+        `❌ Failed to submit MVP activity:\n\n${errorMsg}\n\nActivity type: ${activity.activityTypeName}\nTitle: ${activity.title}`,
       );
     }
   }
@@ -682,7 +682,8 @@ export class UnifiedActivityReportingServer {
         let errorMessage = `GDE API error (${response.status})`;
 
         if (response.status === 401) {
-          errorMessage = "❌ GDE authentication failed. Your ADVOCU_ACCESS_TOKEN may be expired or invalid.\n\nPlease check your Advocu access token configuration.";
+          errorMessage =
+            "❌ GDE authentication failed. Your ADVOCU_ACCESS_TOKEN may be expired or invalid.\n\nPlease check your Advocu access token configuration.";
         } else if (response.status === 400) {
           errorMessage = `❌ GDE API rejected the request:\n\n${errorText}\n\nPlease check:\n- All required fields are present\n- Field values match expected formats\n- Tags are valid\n- Date format is correct (YYYY-MM-DD)`;
         } else if (response.status === 429) {
@@ -717,7 +718,7 @@ export class UnifiedActivityReportingServer {
       const errorMsg = this.getErrorMessage(error);
       throw new McpError(
         ErrorCode.InternalError,
-        `❌ Failed to submit GDE activity:\n\n${errorMsg}\n\nEndpoint: ${endpoint}`
+        `❌ Failed to submit GDE activity:\n\n${errorMsg}\n\nEndpoint: ${endpoint}`,
       );
     }
   }

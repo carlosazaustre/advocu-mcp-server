@@ -598,10 +598,7 @@ export class ActivityReportingServer {
           throw error;
         }
         const errorMsg = this.getErrorMessage(error);
-        throw new McpError(
-          ErrorCode.InternalError,
-          `Failed to execute tool '${name}': ${errorMsg}`
-        );
+        throw new McpError(ErrorCode.InternalError, `Failed to execute tool '${name}': ${errorMsg}`);
       }
     });
   }
@@ -639,7 +636,8 @@ export class ActivityReportingServer {
         let errorMessage = `GDE API error (${response.status})`;
 
         if (response.status === 401) {
-          errorMessage = "❌ GDE authentication failed. Your ADVOCU_ACCESS_TOKEN may be expired or invalid.\n\nPlease check your Advocu access token configuration.";
+          errorMessage =
+            "❌ GDE authentication failed. Your ADVOCU_ACCESS_TOKEN may be expired or invalid.\n\nPlease check your Advocu access token configuration.";
         } else if (response.status === 400) {
           errorMessage = `❌ GDE API rejected the request:\n\n${errorText}\n\nPlease check:\n- All required fields are present\n- Field values match expected formats\n- Tags are valid\n- Date format is correct (YYYY-MM-DD)`;
         } else if (response.status === 429) {
@@ -676,7 +674,7 @@ export class ActivityReportingServer {
       const errorMsg = this.getErrorMessage(error);
       throw new McpError(
         ErrorCode.InternalError,
-        `❌ Failed to submit GDE activity:\n\n${errorMsg}\n\nEndpoint: ${endpoint}`
+        `❌ Failed to submit GDE activity:\n\n${errorMsg}\n\nEndpoint: ${endpoint}`,
       );
     }
   }

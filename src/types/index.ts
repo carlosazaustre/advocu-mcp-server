@@ -4,10 +4,10 @@
  */
 
 export { ContentType } from "./ContentType.js";
-export { EventFormat } from "./EventFormat.js";
-export { Tag } from "./Tag.js";
 export { Country } from "./Country.js";
-export { ProductFeedbackContentType } from "./ProductFeedbackContentType.js";
+export { EventFormat } from "./EventFormat.js";
 export { InteractionFormat } from "./InteractionFormat.js";
 export { InteractionType } from "./InteractionType.js";
+export { ProductFeedbackContentType } from "./ProductFeedbackContentType.js";
 export { SignificanceType } from "./SignificanceType.js";
+export { Tag } from "./Tag.js";
