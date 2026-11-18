@@ -19,7 +19,10 @@ import { join } from "node:path";
 // GDE imports
 import type {
   ContentCreationDraft,
+  GDEActivitiesPage,
+  GDEActivity,
   GooglerInteractionDraft,
+  ListGDEActivitiesParams,
   MentoringDraft,
   ProductFeedbackDraft,
   PublicSpeakingDraft,
@@ -83,6 +86,14 @@ const DOCUMENTATION_RESOURCES = [
     file: "MCP_RESOURCES.md",
   },
 ] as const;
+
+// ISO-8601 UTC timestamp accepted by the Advocu activities filters, e.g. 2026-01-01T00:00:00Z
+const ISO_DATE_TIME_PATTERN = "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$";
+
+// Safety cap for `fetchAll` pagination (the Advocu API allows 30 requests per minute)
+const GDE_MAX_PAGES = 25;
+
+type GDEActivitiesPageResult = { ok: true; data: GDEActivitiesPage } | { ok: false; error: string };
 
 export class UnifiedActivityReportingServer {
   private readonly server: Server;
@@ -207,6 +218,45 @@ export class UnifiedActivityReportingServer {
                 private: { type: "boolean" },
               },
               required: ["title", "description", "activityDate", "contentType", "metrics", "activityUrl"],
+            },
+          },
+          {
+            name: "list_gde_activities",
+            description:
+              "List your existing GDE activities from Advocu (read-only), sorted by submission date in ascending order. Supports date filters and pagination; set fetchAll to retrieve every page.",
+            inputSchema: {
+              type: "object",
+              properties: {
+                from: {
+                  type: "string",
+                  pattern: ISO_DATE_TIME_PATTERN,
+                  description: "Filter by submission date from (inclusive), e.g. 2026-01-01T00:00:00Z",
+                },
+                to: {
+                  type: "string",
+                  pattern: ISO_DATE_TIME_PATTERN,
+                  description: "Filter by submission date to (exclusive), e.g. 2027-01-01T00:00:00Z",
+                },
+                updatedAfter: {
+                  type: "string",
+                  pattern: ISO_DATE_TIME_PATTERN,
+                  description: "Filter activities updated after this date, e.g. 2026-01-01T00:00:00Z",
+                },
+                page: { type: "integer", minimum: 0, default: 0, description: "Page number (cannot be negative)" },
+                size: {
+                  type: "integer",
+                  minimum: 1,
+                  maximum: 100,
+                  default: 10,
+                  description: "Page size (1-100). Defaults to 100 when fetchAll is true.",
+                },
+                fetchAll: {
+                  type: "boolean",
+                  default: false,
+                  description: `Automatically fetch every page starting at \`page\` (up to ${GDE_MAX_PAGES} pages)`,
+                },
+              },
+              required: [],
             },
           },
           // Add other GDE tools...
@@ -393,6 +443,13 @@ export class UnifiedActivityReportingServer {
         }
 
         // GDE tools
+        if (name === "list_gde_activities") {
+          if (!this.gdeEnabled) {
+            throw new McpError(ErrorCode.InvalidRequest, "GDE tools are not enabled. Please configure GDE credentials.");
+          }
+          return await this.listGDEActivities((args ?? {}) as ListGDEActivitiesParams);
+        }
+
         if (name.startsWith("submit_gde_")) {
           if (!this.gdeEnabled) {
             throw new McpError(ErrorCode.InvalidRequest, "GDE tools are not enabled. Please configure GDE credentials.");
@@ -664,6 +721,136 @@ export class UnifiedActivityReportingServer {
   }
 
   // GDE Methods
+
+  /**
+   * Build a user-friendly error message for a failed GDE (Advocu) API response
+   */
+  private buildGDEErrorMessage(status: number, errorText: string, badRequestHint: string): string {
+    switch (status) {
+      case 401:
+        return "❌ GDE authentication failed. Your ADVOCU_ACCESS_TOKEN may be expired or invalid.\n\nPlease check your Advocu access token configuration.";
+      case 400:
+        return `❌ GDE API rejected the request:\n\n${errorText}\n\nPlease check:\n${badRequestHint}`;
+      case 429:
+        return "⏱️ GDE API rate limit exceeded (30 requests/minute). Please wait and try again.";
+      default:
+        return `❌ GDE API error (${status}):\n\n${errorText}`;
+    }
+  }
+
+  private toTextResult(text: string) {
+    return {
+      content: [
+        {
+          type: "text",
+          text,
+        },
+      ],
+    };
+  }
+
+  /**
+   * Fetch a single page of activities from `GET /activities`
+   */
+  private async fetchGDEActivitiesPage(
+    params: ListGDEActivitiesParams,
+    page: number,
+    size: number,
+  ): Promise<GDEActivitiesPageResult> {
+    const query = new URLSearchParams({ page: String(page), size: String(size) });
+    if (params.from) query.set("from", params.from);
+    if (params.to) query.set("to", params.to);
+    if (params.updatedAfter) query.set("updatedAfter", params.updatedAfter);
+
+    const response = await fetch(`${this.gdeBaseUrl}/activities?${query.toString()}`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${this.gdeAccessToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      return {
+        ok: false,
+        error: this.buildGDEErrorMessage(
+          response.status,
+          errorText,
+          "- Dates use ISO-8601 UTC format (e.g. 2026-01-01T00:00:00Z)\n- `page` is >= 0 and `size` is between 1 and 100",
+        ),
+      };
+    }
+
+    return { ok: true, data: (await response.json()) as GDEActivitiesPage };
+  }
+
+  /**
+   * List existing GDE activities, optionally fetching every page
+   */
+  private async listGDEActivities(params: ListGDEActivitiesParams) {
+    const startPage = params.page ?? 0;
+    const size = params.size ?? (params.fetchAll ? 100 : 10);
+
+    if (!Number.isInteger(startPage) || startPage < 0) {
+      return this.toTextResult("❌ Invalid `page`: it must be an integer greater than or equal to 0.");
+    }
+    if (!Number.isInteger(size) || size < 1 || size > 100) {
+      return this.toTextResult("❌ Invalid `size`: it must be an integer between 1 and 100.");
+    }
+
+    if (!params.fetchAll) {
+      const result = await this.fetchGDEActivitiesPage(params, startPage, size);
+      return this.toTextResult(result.ok ? JSON.stringify(result.data, null, 2) : result.error);
+    }
+
+    const activities: GDEActivity[] = [];
+    let pagesFetched = 0;
+    let truncated = false;
+    let error: string | undefined;
+
+    while (true) {
+      if (pagesFetched >= GDE_MAX_PAGES) {
+        truncated = true;
+        break;
+      }
+
+      let result: GDEActivitiesPageResult;
+      try {
+        result = await this.fetchGDEActivitiesPage(params, startPage + pagesFetched, size);
+      } catch (fetchError) {
+        // Nothing fetched yet: let the tool handler report the failure
+        if (pagesFetched === 0) throw fetchError;
+        result = { ok: false, error: `❌ Failed to reach the GDE API: ${this.getErrorMessage(fetchError)}` };
+      }
+
+      if (!result.ok) {
+        if (pagesFetched === 0) return this.toTextResult(result.error);
+        // Keep the activities already fetched and report the error alongside them
+        error = result.error;
+        break;
+      }
+
+      const pageContent = Array.isArray(result.data.content) ? result.data.content : [];
+      activities.push(...pageContent);
+      pagesFetched++;
+
+      if (pageContent.length < size || result.data.last === true) break;
+    }
+
+    const summary = {
+      content: activities,
+      totalFetched: activities.length,
+      pagesFetched,
+      truncated,
+      // Page to request next to continue where this call stopped
+      ...(truncated || error ? { nextPage: startPage + pagesFetched } : {}),
+      ...(error ? { error } : {}),
+    };
+
+    return this.toTextResult(JSON.stringify(summary, null, 2));
+  }
+
   private async submitGDEActivityDraft(endpoint: string, data: ContentCreationDraft) {
     const url = `${this.gdeBaseUrl}/activity-drafts/${endpoint}`;
 
@@ -679,17 +866,11 @@ export class UnifiedActivityReportingServer {
 
       if (!response.ok) {
         const errorText = await response.text();
-        let errorMessage = `GDE API error (${response.status})`;
-
-        if (response.status === 401) {
-          errorMessage = "❌ GDE authentication failed. Your ADVOCU_ACCESS_TOKEN may be expired or invalid.\n\nPlease check your Advocu access token configuration.";
-        } else if (response.status === 400) {
-          errorMessage = `❌ GDE API rejected the request:\n\n${errorText}\n\nPlease check:\n- All required fields are present\n- Field values match expected formats\n- Tags are valid\n- Date format is correct (YYYY-MM-DD)`;
-        } else if (response.status === 429) {
-          errorMessage = "⏱️ GDE API rate limit exceeded (30 requests/minute). Please wait and try again.";
-        } else {
-          errorMessage = `❌ GDE API error (${response.status}):\n\n${errorText}`;
-        }
+        const errorMessage = this.buildGDEErrorMessage(
+          response.status,
+          errorText,
+          "- All required fields are present\n- Field values match expected formats\n- Tags are valid\n- Date format is correct (YYYY-MM-DD)",
+        );
 
         // Return error as content instead of throwing
         return {
