@@ -11,3 +11,4 @@ export type { MentoringDraft } from "./MentoringDraft.js";
 export type { ProductFeedbackDraft } from "./ProductFeedbackDraft.js";
 export type { GooglerInteractionDraft } from "./GooglerInteractionDraft.js";
 export type { StoryDraft } from "./StoryDraft.js";
+export type { GDEActivity, GDEActivitiesPage, ListGDEActivitiesParams } from "./GDEActivity.js";
