@@ -400,3 +400,42 @@ Records a story or significant experience.
 | metrics.impact   | integer | Impact (views, reads, attendees, etc.)     | minimum 1                                                    |
 | additionalInfo   | string  | Additional information                     | max length 2000                                              |
 | private          | boolean | Do you want to make this activity private? | -                                                            |
+------
+
+## GET /activities
+
+Returns a pageable list of your activities, sorted by submission date in ascending order. Used by the `list_gde_activities` tool.
+
+### Query parameters
+
+| Name         | Type    | Description                                                     | Default |
+| ------------ | ------- | --------------------------------------------------------------- | ------- |
+| from         | string  | Filter by submission date from (inclusive), e.g. 2026-01-01T00:00:00Z | -       |
+| to           | string  | Filter by submission date to (exclusive), e.g. 2026-01-01T00:00:00Z   | -       |
+| updatedAfter | string  | Filter activities updated after this date, e.g. 2026-01-01T00:00:00Z  | -       |
+| page         | integer | Page number (cannot be negative)                                | 0       |
+| size         | integer | Page size (1-100)                                               | 10      |
+
+### Response
+
+| Name    | Type            | Description          |
+| ------- | --------------- | -------------------- |
+| content | array[Activity] | Activities in the page |
+
+### Activity
+
+| Name                      | Type         | Description                     | Restrictions    |
+| ------------------------- | ------------ | ------------------------------- | --------------- |
+| activityId                | string       | Activity identifier             | -               |
+| type                      | string       | Activity type                   | enum (9 values) |
+| data                      | ActivityData | Activity-specific fields        | -               |
+| submissionDate            | string       | e.g. 2026-01-01T00:00:00Z       | -               |
+| updatedDate               | string       | e.g. 2026-01-01T00:00:00Z       | -               |
+| archiveDate (optional)    | string       | e.g. 2026-01-01T00:00:00Z       | -               |
+
+### `list_gde_activities` tool behavior
+
+- Without `fetchAll`, the tool returns the API page as-is (`page` defaults to 0, `size` to 10).
+- With `fetchAll: true`, the tool requests pages starting at `page` (default `size` 100) until a page has fewer than `size` items, and returns `{ content, totalFetched, pagesFetched, truncated }`.
+- To respect the 30 requests/minute rate limit, `fetchAll` stops after 25 pages. In that case `truncated` is `true` and `nextPage` tells you which page to request next.
+- If a page fails after others were fetched, the activities already fetched are returned together with an `error` field and `nextPage`.
