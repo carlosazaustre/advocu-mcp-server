@@ -123,6 +123,7 @@ The codebase uses a type-safe, inheritance-based structure for activity drafts:
 5. `submit_gde_product_feedback`
 6. `submit_gde_googler_interaction`
 7. `submit_gde_story`
+8. `list_gde_activities` - Read-only: lists existing activities via `GET /activities` (date filters, pagination, optional `fetchAll`)
 
 #### MVP Tools (when `MVP_ACCESS_TOKEN` and `MVP_USER_PROFILE_ID` are set)
 1. `submit_mvp_video` - For videos, webinars, livestreams

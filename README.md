@@ -226,6 +226,10 @@ Just talk to Claude naturally! Here are examples:
 "Report my mentoring session with 3 developers about TypeScript best practices"
 ```
 
+```
+"List all my GDE activities submitted in 2026"
+```
+
 ---
 
 ## 🔧 Available Tools
@@ -254,10 +258,11 @@ Just talk to Claude naturally! Here are examples:
 | `submit_mvp_blog` | Blog posts, articles | views, subscribers, tech area |
 | `submit_mvp_speaking` | Conference talks, presentations | attendees, sessions, tech area |
 
-### Google GDE Tools (7)
+### Google GDE Tools (8)
 
 | Tool | Description |
 |------|-------------|
+| `list_gde_activities` | List your existing activities (read-only): date filters (`from`, `to`, `updatedAfter`), pagination (`page`, `size`) and `fetchAll` |
 | `submit_gde_content_creation` | Articles, videos, podcasts |
 | `submit_gde_public_speaking` | Talks and presentations |
 | `submit_gde_workshop` | Training sessions |
